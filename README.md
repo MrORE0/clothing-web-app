@@ -1,0 +1,1 @@
+A web app that will allow users to choose clothing from one central place. Products from multiple websites will be recommended based on filters like style, availability and measurements. Effectively saving time and effort and making the decision of purchasing quicker.
