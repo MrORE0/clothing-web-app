@@ -1,0 +1,8 @@
+SIZE_PICKER_SELECTOR = "ul[data-testid*='product-size-group'] li"
+COLORS = "li[data-testid='color-picker-list-item'] button[data-testid='color-picker-list-item-button']"
+COLOR_NAME = "span[data-testid*='color-picker-color-name']"
+PRICE = "div[data-selen='product-price']"
+DISCOUNT = "div[data-selen='product-discount-price']"
+REGULAR_PRICE = "div[data-selen='product-regular-price']"
+COOKIE_BUTTON_ID = "#cookiebotDialogOkButton"
+COOKIE_BANNER = "#cookiebanner"
