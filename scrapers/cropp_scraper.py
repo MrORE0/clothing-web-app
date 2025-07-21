@@ -3,8 +3,8 @@ import json
 import time
 from typing import List, Dict, Set
 from playwright.async_api import async_playwright, BrowserContext
-from product import Product, ProductVariant
-from helpers import dismiss_cookie_banner
+from models.product import Product, ProductVariant
+from utils.helpers import dismiss_cookie_banner
 
 # Selectors
 SIZE_PICKER_SELECTOR = "ul[data-testid*='product-size-group'] li"
@@ -91,7 +91,7 @@ class CroppScraper:
 
         self.last_request_time = time.time()
 
-    async def save_progress(self, filename: str = "cropp_progress.json"):
+    async def save_progress(self, filename: str = "data/cropp_progress.json"):
         """Save current progress to recover from failures"""
         progress_data = {
             "processed_urls": list(self.processed_urls),
@@ -103,7 +103,7 @@ class CroppScraper:
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(progress_data, f, indent=2, ensure_ascii=False)
 
-    async def load_progress(self, filename: str = "cropp_progress.json"):
+    async def load_progress(self, filename: str = "data/cropp_progress.json"):
         """Load previous progress"""
         try:
             with open(filename, "r", encoding="utf-8") as f:

@@ -1,5 +1,5 @@
 import asyncio
-from selectors_consts import COOKIE_BUTTON_ID, COOKIE_BANNER, COLOR_NAME
+from utils.selectors_consts import COOKIE_BUTTON_ID, COOKIE_BANNER, COLOR_NAME
 
 
 async def dismiss_cookie_banner(page):

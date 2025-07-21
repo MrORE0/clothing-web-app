@@ -1,6 +1,6 @@
 import asyncio
 import json
-from CroppScraper import CroppScraper
+from scrapers.cropp_scraper import CroppScraper
 
 
 async def scrape_cropp_website():
@@ -32,7 +32,7 @@ async def scrape_cropp_website():
         print(f"Failed URLs: {len(scraper.failed_urls)}")
 
         # Save final results using Pydantic's JSON serialization mode
-        with open("cropp_products.json", "w", encoding="utf-8") as f:
+        with open("data/cropp_products.json", "w", encoding="utf-8") as f:
             products_json = [product.model_dump(mode="json") for product in results]
             json.dump(products_json, f, indent=2, ensure_ascii=False)
 

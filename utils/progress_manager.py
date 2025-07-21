@@ -1,7 +1,7 @@
 import json
 import time
 from typing import Set, List
-from product import Product
+from models.product import Product
 
 
 class ProgressManager:
