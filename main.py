@@ -1,12 +1,12 @@
 import asyncio
 import json
-from scrapers.cropp_scraper import CroppScraper
+from scrapers.scraper import Scraper
 
 
-async def scrape_cropp_website():
-    """Main function to scrape the entire Cropp website"""
+async def scrape_website():
+    """Main function to scrape the entire website"""
 
-    scraper = CroppScraper(
+    scraper = Scraper(
         max_concurrent_pages=3,  # less for cloud resources
         context_pool_size=2,
         batch_size=20,  # smaller batches for better memory management
@@ -16,7 +16,9 @@ async def scrape_cropp_website():
     await scraper.progress_manager.load_progress()
 
     urls = [
-        "https://www.reserved.com/bg/bg/pulover-sas-sadarzhanie-na-valna-358gp-03x",
+        "https://www.mohito.com/bg/bg/midi-pola-952ee-29p?place=home&brick=new-collection-item-2-3607626",
+        "https://www.reserved.com/bg/bg/pulover-sas-sadarzhanie-na-valna-358gp-69x",
+        "https://www.cropp.com/bg/bg/kas-suitshart-s-kachulka-921aq-01x",
     ]
 
     print(f"Starting scrape of {len(urls)} URLs...")
@@ -29,7 +31,7 @@ async def scrape_cropp_website():
         print(f"Failed URLs: {len(scraper.progress_manager.failed_urls)}")
 
         # Save final results using Pydantic's JSON serialization mode
-        with open("data/cropp_products.json", "w", encoding="utf-8") as f:
+        with open("data/products.json", "w", encoding="utf-8") as f:
             products_json = [product.model_dump(mode="json") for product in results]
             json.dump(products_json, f, indent=2, ensure_ascii=False)
 
@@ -42,4 +44,4 @@ async def scrape_cropp_website():
 
 
 if __name__ == "__main__":
-    asyncio.run(scrape_cropp_website())
+    asyncio.run(scrape_website())

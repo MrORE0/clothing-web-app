@@ -1,0 +1,135 @@
+[
+  {
+    "name": "Миди пола",
+    "variants": [
+      {
+        "color": "цикламено",
+        "sizes": {
+          "32": false,
+          "34": false,
+          "36": false,
+          "38": false,
+          "40": false,
+          "42": false
+        },
+        "url": "https://www.mohito.com/bg/bg/midi-pola-952ee-42x",
+        "price": 44.99,
+        "discounted_price": null,
+        "currency": "BGN"
+      },
+      {
+        "color": "червено",
+        "sizes": {
+          "32": true,
+          "34": true,
+          "36": true,
+          "38": true,
+          "40": true,
+          "42": true
+        },
+        "url": "https://www.mohito.com/bg/bg/midi-pola-952ee-29p",
+        "price": 44.99,
+        "discounted_price": 42.99,
+        "currency": "BGN"
+      }
+    ]
+  },
+  {
+    "name": "Пуловер със съдържание на вълна",
+    "variants": [
+      {
+        "color": "Кaфяв",
+        "sizes": {
+          "S": true,
+          "M": true,
+          "L": true,
+          "XL": true
+        },
+        "url": "https://www.reserved.com/bg/bg/pulover-sas-sadarzhanie-na-valna-358gp-88x",
+        "price": 49.99,
+        "discounted_price": null,
+        "currency": "BGN"
+      },
+      {
+        "color": "Burgundy",
+        "sizes": {
+          "S": true,
+          "M": true,
+          "L": true,
+          "XL": true
+        },
+        "url": "https://www.reserved.com/bg/bg/pulover-sas-sadarzhanie-na-valna-358gp-53x",
+        "price": 49.99,
+        "discounted_price": null,
+        "currency": "BGN"
+      },
+      {
+        "color": "Тъмнотюркоазено",
+        "sizes": {
+          "S": false,
+          "M": false,
+          "L": false,
+          "XL": false
+        },
+        "url": "https://www.reserved.com/bg/bg/pulover-sas-sadarzhanie-na-valna-358gp-69x",
+        "price": 49.99,
+        "discounted_price": null,
+        "currency": "BGN"
+      },
+      {
+        "color": "Пастелнорозово",
+        "sizes": {
+          "S": true,
+          "M": true,
+          "L": true,
+          "XL": true
+        },
+        "url": "https://www.reserved.com/bg/bg/pulover-sas-sadarzhanie-na-valna-358gp-03x",
+        "price": 49.99,
+        "discounted_price": null,
+        "currency": "BGN"
+      }
+    ]
+  },
+  {
+    "name": "Къс суитшърт с качулка",
+    "variants": [
+      {
+        "color": "Светло сиво",
+        "sizes": {
+          "S": false,
+          "M": false,
+          "L": false
+        },
+        "url": "https://www.cropp.com/bg/bg/kas-suitshart-s-kachulka-921aq-09m",
+        "price": 34.99,
+        "discounted_price": 29.99,
+        "currency": "BGN"
+      },
+      {
+        "color": "кремаво",
+        "sizes": {
+          "S": false,
+          "M": false,
+          "L": true
+        },
+        "url": "https://www.cropp.com/bg/bg/kas-suitshart-s-kachulka-921aq-01x",
+        "price": 16.99,
+        "discounted_price": 15.99,
+        "currency": "BGN"
+      },
+      {
+        "color": "индиго",
+        "sizes": {
+          "S": false,
+          "M": false,
+          "L": false
+        },
+        "url": "https://www.cropp.com/bg/bg/kas-suitshart-s-kachulka-921aq-57x",
+        "price": 15.99,
+        "discounted_price": null,
+        "currency": "BGN"
+      }
+    ]
+  }
+]

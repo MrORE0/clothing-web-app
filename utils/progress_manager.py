@@ -13,7 +13,7 @@ class ProgressManager:
         self.failed_urls: List[str] = []
         self.scraped_products: List[Product] = []
 
-    async def save_progress(self, filename: str = "data/cropp_progress.json"):
+    async def save_progress(self, filename: str = "data/progress.json"):
         """Save current progress to recover from failures"""
         progress_data = {
             "processed_urls": list(self.processed_urls),
@@ -25,7 +25,7 @@ class ProgressManager:
         with open(filename, "w", encoding="utf-8") as f:
             json.dump(progress_data, f, indent=2, ensure_ascii=False)
 
-    async def load_progress(self, filename: str = "data/cropp_progress.json"):
+    async def load_progress(self, filename: str = "data/progress.json"):
         """Load previous progress"""
         try:
             with open(filename, "r", encoding="utf-8") as f:

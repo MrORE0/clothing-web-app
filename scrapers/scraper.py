@@ -10,7 +10,7 @@ from scrapers.rame_limiter import RateLimiter
 from utils.selectors_consts import NAME_SELECTOR
 
 
-class CroppScraper:
+class Scraper:
     def __init__(
         self,
         max_concurrent_pages: int = 3,
