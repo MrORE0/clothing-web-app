@@ -1,156 +1,57 @@
 [
   {
-    "name": "Мини рокля с детайл възел",
+    "name": "Пуловер със съдържание на вълна",
     "variants": [
       {
-        "color": "бял",
+        "color": "Кaфяв",
         "sizes": {
-          "XS": true,
           "S": true,
           "M": true,
           "L": true,
           "XL": true
         },
-        "url": "https://www.cropp.com/bg/bg/mini-roklya-s-detayl-vazel-458ct-00m",
-        "price": 39.99,
-        "discounted_price": 25.99,
-        "currency": "BGN"
-      },
-      {
-        "color": "черeн",
-        "sizes": {
-          "XS": true,
-          "S": true,
-          "M": true,
-          "L": true,
-          "XL": true
-        },
-        "url": "https://www.cropp.com/bg/bg/mini-roklya-s-detayl-vazel-458ct-99x",
-        "price": 39.99,
-        "discounted_price": 25.99,
-        "currency": "BGN"
-      },
-      {
-        "color": "тюркоаз",
-        "sizes": {
-          "XS": true,
-          "S": true,
-          "M": true,
-          "L": true,
-          "XL": true
-        },
-        "url": "https://www.cropp.com/bg/bg/mini-roklya-s-detayl-vazel-458ct-66x",
-        "price": 39.99,
-        "discounted_price": 25.99,
-        "currency": "BGN"
-      }
-    ]
-  },
-  {
-    "name": "Mini dress",
-    "variants": [
-      {
-        "color": "черeн",
-        "sizes": {
-          "XS": true,
-          "S": true,
-          "M": true,
-          "L": true,
-          "XL": true
-        },
-        "url": "https://www.cropp.com/bg/bg/mini-dress-447ct-99x",
-        "price": 29.99,
-        "discounted_price": 17.99,
-        "currency": "BGN"
-      },
-      {
-        "color": "светложълто",
-        "sizes": {
-          "XS": true,
-          "S": true,
-          "M": true,
-          "L": true,
-          "XL": true
-        },
-        "url": "https://www.cropp.com/bg/bg/mini-dress-447ct-10x",
-        "price": 29.99,
-        "discounted_price": 17.99,
-        "currency": "BGN"
-      },
-      {
-        "color": "бял",
-        "sizes": {
-          "XS": true,
-          "S": true,
-          "M": true,
-          "L": true,
-          "XL": true
-        },
-        "url": "https://www.cropp.com/bg/bg/mini-dress-447ct-00x",
-        "price": 29.99,
-        "discounted_price": 17.99,
-        "currency": "BGN"
-      }
-    ]
-  },
-  {
-    "name": "Тениска с принт",
-    "variants": [
-      {
-        "color": "бледосиньо",
-        "sizes": {
-          "S": false,
-          "M": false,
-          "L": true
-        },
-        "url": "https://www.cropp.com/bg/bg/teniska-s-print-127as-05x",
-        "price": 8.99,
+        "url": "https://www.reserved.com/bg/bg/pulover-sas-sadarzhanie-na-valna-358gp-88x",
+        "price": 49.99,
         "discounted_price": null,
         "currency": "BGN"
       },
       {
-        "color": "пастелнорозово",
+        "color": "Burgundy",
         "sizes": {
-          "S": false,
-          "M": false,
-          "L": false
-        },
-        "url": "https://www.cropp.com/bg/bg/teniska-s-print-127as-03x",
-        "price": 8.99,
-        "discounted_price": null,
-        "currency": "BGN"
-      }
-    ]
-  },
-  {
-    "name": "Мини рокля",
-    "variants": [
-      {
-        "color": "многоцветен",
-        "sizes": {
-          "XS": true,
           "S": true,
           "M": true,
           "L": true,
           "XL": true
         },
-        "url": "https://www.cropp.com/bg/bg/mini-roklya-459ct-mlc",
-        "price": 35.99,
-        "discounted_price": 15.99,
+        "url": "https://www.reserved.com/bg/bg/pulover-sas-sadarzhanie-na-valna-358gp-53x",
+        "price": 49.99,
+        "discounted_price": null,
         "currency": "BGN"
       },
       {
-        "color": "бял",
+        "color": "Тъмнотюркоазено",
         "sizes": {
-          "XS": true,
+          "S": false,
+          "M": false,
+          "L": false,
+          "XL": false
+        },
+        "url": "https://www.reserved.com/bg/bg/pulover-sas-sadarzhanie-na-valna-358gp-69x",
+        "price": 49.99,
+        "discounted_price": null,
+        "currency": "BGN"
+      },
+      {
+        "color": "Пастелнорозово",
+        "sizes": {
           "S": true,
           "M": true,
           "L": true,
           "XL": true
         },
-        "url": "https://www.cropp.com/bg/bg/mini-roklya-459ct-00m",
-        "price": 35.99,
-        "discounted_price": 19.99,
+        "url": "https://www.reserved.com/bg/bg/pulover-sas-sadarzhanie-na-valna-358gp-03x",
+        "price": 49.99,
+        "discounted_price": null,
         "currency": "BGN"
       }
     ]

@@ -6,9 +6,9 @@ from utils.selectors_consts import (
     REGULAR_PRICE,
     PRICE,
     DISCOUNT,
-    COLOR_NAME,
     COLORS,
     SIZE_PICKER_SELECTOR,
+    get_color_name_selector,
 )
 
 
@@ -104,7 +104,9 @@ class DataExtractor:
             await asyncio.wait_for(
                 asyncio.gather(
                     page.wait_for_selector(COLORS, timeout=8000),
-                    page.wait_for_selector(COLOR_NAME, timeout=8000),
+                    page.wait_for_selector(
+                        get_color_name_selector(page.url), timeout=8000
+                    ),
                 ),
                 timeout=10,
             )
@@ -123,7 +125,9 @@ class DataExtractor:
                     # Get current color name before clicking
                     try:
                         current_color_name = (
-                            await page.locator(COLOR_NAME).nth(0).inner_text()
+                            await page.locator(get_color_name_selector(page.url))
+                            .nth(0)
+                            .inner_text()
                         )
                     except Exception:
                         current_color_name = "unknown"
@@ -141,7 +145,9 @@ class DataExtractor:
                     # Extract new color name and URL
                     try:
                         new_color_name = (
-                            await page.locator(COLOR_NAME).nth(0).inner_text()
+                            await page.locator(get_color_name_selector(page.url))
+                            .nth(0)
+                            .inner_text()
                         )
                         current_url = page.url
                     except Exception as e:
@@ -227,7 +233,9 @@ class DataExtractor:
                         break
 
                     current_color_name = (
-                        await page.locator(COLOR_NAME).nth(0).inner_text()
+                        await page.locator(get_color_name_selector(page.url))
+                        .nth(0)
+                        .inner_text()
                     )
 
                     if current_color_name != previous_color_name:

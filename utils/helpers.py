@@ -1,5 +1,9 @@
 import asyncio
-from utils.selectors_consts import COOKIE_BUTTON_ID, COOKIE_BANNER, COLOR_NAME
+from utils.selectors_consts import (
+    COOKIE_BUTTON_ID,
+    COOKIE_BANNER,
+    get_color_name_selector,
+)
 
 
 async def dismiss_cookie_banner(page):
@@ -24,7 +28,7 @@ async def wait_for_page_load(page, timeout: int = 10000):
 
         # Ensure essential elements are present and stable
         await asyncio.wait_for(
-            page.wait_for_selector(COLOR_NAME, timeout=timeout),
+            page.wait_for_selector(get_color_name_selector(page.url), timeout=timeout),
             timeout=timeout / 1000,
         )
 

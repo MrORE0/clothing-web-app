@@ -16,10 +16,7 @@ async def scrape_cropp_website():
     await scraper.progress_manager.load_progress()
 
     urls = [
-        "https://www.cropp.com/bg/bg/mini-roklya-s-detayl-vazel-458ct-66x",
-        "https://www.cropp.com/bg/bg/mini-dress-447ct-99x",
-        "https://www.cropp.com/bg/bg/teniska-s-print-127as-05x",
-        "https://www.cropp.com/bg/bg/mini-roklya-459ct-mlc",
+        "https://www.reserved.com/bg/bg/pulover-sas-sadarzhanie-na-valna-358gp-03x",
     ]
 
     print(f"Starting scrape of {len(urls)} URLs...")
