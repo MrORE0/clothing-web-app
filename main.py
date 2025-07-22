@@ -13,7 +13,7 @@ async def scrape_cropp_website():
         save_interval=5,
     )
 
-    await scraper.load_progress()
+    await scraper.progress_manager.load_progress()
 
     urls = [
         "https://www.cropp.com/bg/bg/mini-roklya-s-detayl-vazel-458ct-66x",
@@ -29,7 +29,7 @@ async def scrape_cropp_website():
 
         print("Scraping completed!")
         print(f"Successfully scraped: {len(results)} products")
-        print(f"Failed URLs: {len(scraper.failed_urls)}")
+        print(f"Failed URLs: {len(scraper.progress_manager.failed_urls)}")
 
         # Save final results using Pydantic's JSON serialization mode
         with open("data/cropp_products.json", "w", encoding="utf-8") as f:
@@ -40,7 +40,7 @@ async def scrape_cropp_website():
 
     except Exception as e:
         print(f"Scraping failed: {str(e)}")
-        await scraper.save_progress()  # Save progress even on failure
+        await scraper.progress_manager.save_progress()  # Save progress even on failure
         raise
 
 

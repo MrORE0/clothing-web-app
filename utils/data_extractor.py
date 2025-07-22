@@ -2,7 +2,7 @@ import asyncio
 import time
 from typing import List, Dict
 from models.product import ProductVariant
-from selectors_consts import (
+from utils.selectors_consts import (
     REGULAR_PRICE,
     PRICE,
     DISCOUNT,

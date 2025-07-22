@@ -1,3 +1,4 @@
+NAME_SELECTOR = "h1[data-testid*='product-name']"
 SIZE_PICKER_SELECTOR = "ul[data-testid*='product-size-group'] li"
 COLORS = "li[data-testid='color-picker-list-item'] button[data-testid='color-picker-list-item-button']"
 COLOR_NAME = "span[data-testid*='color-picker-color-name']"
