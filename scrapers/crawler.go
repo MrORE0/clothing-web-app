@@ -1,12 +1,18 @@
-package main
+package scrapers
 
 import (
+	"net/http"
 	"net/url"
 	"strings"
 	"time"
 
 	"golang.org/x/net/html"
 )
+
+type Crawler struct {
+	BaseURL string
+	Client  *http.Client
+}
 
 func NewCrawler(baseURL string) *Crawler {
 	return &Crawler{

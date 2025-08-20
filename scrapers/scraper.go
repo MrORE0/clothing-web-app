@@ -1,7 +1,6 @@
-package main
+package scrapers
 
 import (
-	"clothing-web-app/models"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -10,6 +9,8 @@ import (
 	"net/url"
 	"sync"
 	"time"
+
+	"github.com/MrORE0/clothing-web-app/models"
 )
 
 var (
@@ -35,7 +36,13 @@ func getHTTPClient(timeout time.Duration) *http.Client {
 	return httpClient
 }
 
-func NewUnifiedRequester(config *Config) *UnifiedRequester {
+// UnifiedRequester handles both HTML and JSON requests with the same pattern
+type UnifiedRequester struct {
+	client *http.Client
+	config *models.Config
+}
+
+func NewUnifiedRequester(config *models.Config) *UnifiedRequester {
 	return &UnifiedRequester{
 		client: getHTTPClient(config.Timeout),
 		config: config,
@@ -43,13 +50,13 @@ func NewUnifiedRequester(config *Config) *UnifiedRequester {
 }
 
 // ProcessRequests handles both HTML and JSON requests uniformly
-func (ur *UnifiedRequester) ProcessRequests(requests []RequestInfo) []*RequestResult {
+func (ur *UnifiedRequester) ProcessRequests(requests []models.RequestInfo) []*models.RequestResult {
 	if len(requests) == 0 {
 		return nil
 	}
 
-	requestChan := make(chan RequestInfo, len(requests))
-	resultChan := make(chan *RequestResult, len(requests))
+	requestChan := make(chan models.RequestInfo, len(requests))
+	resultChan := make(chan *models.RequestResult, len(requests))
 
 	// Start workers
 	var wg sync.WaitGroup
@@ -73,7 +80,7 @@ func (ur *UnifiedRequester) ProcessRequests(requests []RequestInfo) []*RequestRe
 	}()
 
 	// Collect results
-	results := make([]*RequestResult, 0, len(requests))
+	results := make([]*models.RequestResult, 0, len(requests))
 	for result := range resultChan {
 		results = append(results, result)
 	}
@@ -81,7 +88,7 @@ func (ur *UnifiedRequester) ProcessRequests(requests []RequestInfo) []*RequestRe
 	return results
 }
 
-func (ur *UnifiedRequester) worker(requestChan <-chan RequestInfo, resultChan chan<- *RequestResult, wg *sync.WaitGroup) {
+func (ur *UnifiedRequester) worker(requestChan <-chan models.RequestInfo, resultChan chan<- *models.RequestResult, wg *sync.WaitGroup) {
 	defer wg.Done()
 
 	for reqInfo := range requestChan {
@@ -90,7 +97,7 @@ func (ur *UnifiedRequester) worker(requestChan <-chan RequestInfo, resultChan ch
 	}
 }
 
-func (ur *UnifiedRequester) makeRequest(reqInfo RequestInfo) *RequestResult {
+func (ur *UnifiedRequester) makeRequest(reqInfo models.RequestInfo) *models.RequestResult {
 	start := time.Now()
 
 	ctx, cancel := context.WithTimeout(context.Background(), ur.config.Timeout)
@@ -98,7 +105,7 @@ func (ur *UnifiedRequester) makeRequest(reqInfo RequestInfo) *RequestResult {
 
 	req, err := http.NewRequestWithContext(ctx, "GET", reqInfo.URL, nil)
 	if err != nil {
-		return &RequestResult{
+		return &models.RequestResult{
 			URL:       reqInfo.URL,
 			ProductID: reqInfo.ProductID,
 			Duration:  time.Since(start).Milliseconds(),
@@ -124,7 +131,7 @@ func (ur *UnifiedRequester) makeRequest(reqInfo RequestInfo) *RequestResult {
 
 	resp, err := ur.client.Do(req)
 	if err != nil {
-		return &RequestResult{
+		return &models.RequestResult{
 			URL:       reqInfo.URL,
 			ProductID: reqInfo.ProductID,
 			Duration:  time.Since(start).Milliseconds(),
@@ -133,7 +140,7 @@ func (ur *UnifiedRequester) makeRequest(reqInfo RequestInfo) *RequestResult {
 	}
 	defer resp.Body.Close()
 
-	result := &RequestResult{
+	result := &models.RequestResult{
 		URL:         reqInfo.URL,
 		ProductID:   reqInfo.ProductID,
 		StatusCode:  resp.StatusCode,

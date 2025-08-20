@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"encoding/csv"
@@ -7,10 +7,12 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/MrORE0/clothing-web-app/models"
 )
 
 // SaveResults saves both raw responses and parsed data
-func SaveResults(results []*RequestResult, outputDir string) error {
+func SaveResults(results []*models.RequestResult, outputDir string) error {
 	if err := os.MkdirAll(outputDir, 0755); err != nil {
 		return fmt.Errorf("failed to create output directory: %w", err)
 	}
@@ -84,12 +86,12 @@ func extractProductID(url string) string {
 }
 
 // saveResponses saves individual responses (deprecated - use SaveResults instead)
-func saveResponses(results []*RequestResult, outputDir string) error {
+func saveResponses(results []*models.RequestResult, outputDir string) error {
 	fmt.Println("Warning: saveResponses is deprecated, use SaveResults instead")
 	return SaveResults(results, outputDir)
 }
 
-func readURLsFromCSV(filename string) ([]string, error) {
+func ReadURLsFromCSV(filename string) ([]string, error) {
 	// Use default if empty
 	if filename == "" {
 		filename = "../data/urls_to_scrape.csv"
