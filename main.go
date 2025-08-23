@@ -10,32 +10,53 @@ import (
 func main() {
 	var wg sync.WaitGroup
 
-	// Category IDs
-	femaleCategoryURL := "https://arch.cropp.com/api/1099/category/17991/productsWithoutFilters"
-	maleCategoryURL := "https://arch.cropp.com/api/1099/category/19173/productsWithoutFilters"
+	wg.Add(5)
 
-	wg.Add(2)
-
-	// Start female scraping
 	go func() {
 		defer wg.Done()
-		client := scrapers.NewCroppAPIClient(femaleCategoryURL)
-		err := client.FetchAllProductsToFile("./data/female_products.json")
+		client := scrapers.NewAPIClient("https://arch.cropp.com/api/1099/category/17991/productsWithoutFilters")
+		err := client.FetchAllProductsToFile("./data/cropp_female_products.json")
 		if err != nil {
-			log.Printf("Failed to fetch female products: %v", err)
+			log.Printf("Cropp female error: %v", err)
 		}
 	}()
 
-	// Start male scraping
 	go func() {
 		defer wg.Done()
-		client := scrapers.NewCroppAPIClient(maleCategoryURL)
-		err := client.FetchAllProductsToFile("./data/male_products.json")
+		client := scrapers.NewAPIClient("https://arch.cropp.com/api/1099/category/19173/productsWithoutFilters")
+		err := client.FetchAllProductsToFile("./data/cropp_male_products.json")
 		if err != nil {
-			log.Printf("Failed to fetch male products: %v", err)
+			log.Printf("Cropp male error: %v", err)
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		client := scrapers.NewAPIClient("https://arch.housebrand.com/api/1081/category/2879/productsWithoutFilters")
+		err := client.FetchAllProductsToFile("./data/housebrand_products.json")
+		if err != nil {
+			log.Printf("Housebrand error: %v", err)
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		client := scrapers.NewAPIClient("https://arch.mohito.com/api/1086/category/1983/productsWithoutFilters")
+		err := client.FetchAllProductsToFile("./data/mohito_female_products.json")
+		if err != nil {
+			log.Printf("Mohito femlae error: %v", err)
+		}
+	}()
+
+	go func() {
+		defer wg.Done()
+		client := scrapers.NewAPIClient("https://arch.housebrand.com/api/1081/category/3055/productsWithoutFilters")
+		err := client.FetchAllProductsToFile("./data/mohito_male_products.json")
+		if err != nil {
+			log.Printf("Mohito male error: %v", err)
 		}
 	}()
 
 	wg.Wait()
-	log.Println("Finished scraping both female and male products.")
+	log.Println("Finished scraping all brands.")
 }

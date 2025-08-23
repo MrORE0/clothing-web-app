@@ -6,24 +6,26 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/MrORE0/clothing-web-app/models"
 )
 
-type CroppAPIResponse struct {
-	Products    []models.RawProduct `json:"products"` // <--- FIXED
+type APIResponse struct {
+	Products    []models.RawProduct `json:"products"`
 	TotalAmount int                 `json:"productsTotalAmount"`
 }
 
-type CroppAPIClient struct {
+type APIClient struct {
 	BaseURL string
 	Client  *http.Client
 }
 
-func NewCroppAPIClient(baseURL string) *CroppAPIClient {
-	return &CroppAPIClient{
+func NewAPIClient(baseURL string) *APIClient {
+	return &APIClient{
 		BaseURL: baseURL,
 		Client: &http.Client{
 			Timeout: 30 * time.Second,
@@ -31,16 +33,34 @@ func NewCroppAPIClient(baseURL string) *CroppAPIClient {
 	}
 }
 
-func (c *CroppAPIClient) fetch(ctx context.Context, url string) (*CroppAPIResponse, error) {
-	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+func (c *APIClient) fetch(ctx context.Context, rawURL string) (*APIResponse, error) {
+	// Parse the URL
+	parsedURL, err := url.Parse(rawURL)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse URL: %w", err)
+	}
+
+	// Extract brand from domain like "arch.mohito.com" → "mohito.com"
+	hostParts := strings.Split(parsedURL.Host, ".")
+	refererDomain := ""
+	if len(hostParts) >= 2 {
+		refererDomain = hostParts[len(hostParts)-2] + "." + hostParts[len(hostParts)-1]
+	}
+
+	// Build referer
+	referer := fmt.Sprintf("https://www.%s/", refererDomain)
+
+	// Build request
+	req, err := http.NewRequestWithContext(ctx, "GET", rawURL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
 	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Referer", "https://www.cropp.com/")
+	req.Header.Set("Referer", referer)
 
+	// Make request
 	resp, err := c.Client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to make request: %w", err)
@@ -56,7 +76,7 @@ func (c *CroppAPIClient) fetch(ctx context.Context, url string) (*CroppAPIRespon
 		return nil, fmt.Errorf("failed to read response body: %w", err)
 	}
 
-	var result CroppAPIResponse
+	var result APIResponse
 	if err := json.Unmarshal(body, &result); err != nil {
 		return nil, fmt.Errorf("failed to parse JSON response: %w", err)
 	}
@@ -64,7 +84,7 @@ func (c *CroppAPIClient) fetch(ctx context.Context, url string) (*CroppAPIRespon
 	return &result, nil
 }
 
-func (c *CroppAPIClient) FetchAllProductsToFile(outputPath string) error {
+func (c *APIClient) FetchAllProductsToFile(outputPath string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
