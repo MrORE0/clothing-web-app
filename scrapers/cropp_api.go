@@ -89,7 +89,7 @@ func (c *CroppAPIClient) FetchAllProducts() ([]models.Product, error) {
 	var products []models.Product
 
 	for _, raw := range fullResp.Products {
-		parsed := raw.ConvertToProduct()
+		parsed := raw.ToParsed()
 		if len(parsed.Variants) > 0 {
 			products = append(products, parsed)
 		}
