@@ -22,9 +22,9 @@ type CroppAPIClient struct {
 	Client  *http.Client
 }
 
-func NewCroppAPIClient() *CroppAPIClient {
+func NewCroppAPIClient(baseURL string) *CroppAPIClient {
 	return &CroppAPIClient{
-		BaseURL: "https://arch.cropp.com/api/1099/category/17991/productsWithoutFilters",
+		BaseURL: baseURL,
 		Client: &http.Client{
 			Timeout: 30 * time.Second,
 		},
@@ -64,7 +64,7 @@ func (c *CroppAPIClient) fetch(ctx context.Context, url string) (*CroppAPIRespon
 	return &result, nil
 }
 
-func (c *CroppAPIClient) FetchAllProducts() ([]models.Product, error) {
+func (c *CroppAPIClient) FetchAllProductsToFile(outputPath string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
@@ -72,10 +72,10 @@ func (c *CroppAPIClient) FetchAllProducts() ([]models.Product, error) {
 
 	initialResp, err := c.fetch(ctx, testURL)
 	if err != nil {
-		return nil, fmt.Errorf("failed initial test request: %w", err)
+		return fmt.Errorf("failed initial test request: %w", err)
 	}
 	if initialResp.TotalAmount == 0 {
-		return nil, fmt.Errorf("no products found")
+		return fmt.Errorf("no products found")
 	}
 
 	finalURL := fmt.Sprintf("%s?offset=0&pageSize=%d&filters[sortBy]=3&flags[enableddiscountfilter]=true&flags[colorspreviewinfilters]=true&flags[quickshop]=true&flags[loadmorebutton]=1&flags[filterscounter]=1",
@@ -83,7 +83,7 @@ func (c *CroppAPIClient) FetchAllProducts() ([]models.Product, error) {
 
 	fullResp, err := c.fetch(ctx, finalURL)
 	if err != nil {
-		return nil, fmt.Errorf("failed full request: %w", err)
+		return fmt.Errorf("failed full request: %w", err)
 	}
 
 	var products []models.Product
@@ -96,20 +96,19 @@ func (c *CroppAPIClient) FetchAllProducts() ([]models.Product, error) {
 	}
 
 	if err := os.MkdirAll("./data", 0755); err != nil {
-		return nil, fmt.Errorf("failed to create data directory: %w", err)
+		return fmt.Errorf("failed to create data directory: %w", err)
 	}
 
-	outputPath := "./data/products.json"
 	jsonData, err := json.MarshalIndent(products, "", "  ")
 	if err != nil {
-		return nil, fmt.Errorf("failed to marshal products: %w", err)
+		return fmt.Errorf("failed to marshal products: %w", err)
 	}
 
 	err = os.WriteFile(outputPath, jsonData, 0644)
 	if err != nil {
-		return nil, fmt.Errorf("failed to write products file: %w", err)
+		return fmt.Errorf("failed to write products file: %w", err)
 	}
 
-	fmt.Printf("Successfully scraped %d products from Cropp\n", len(products))
-	return products, nil
+	fmt.Printf("Successfully scraped %d products to %s\n", len(products), outputPath)
+	return nil
 }
