@@ -1,9 +1,33 @@
 .navbar{
   font-family: 'Noto Serif Gurmukhi', sans-serif;
+  transition: all 0.3s ease;
+  position: sticky;
+  padding: 0px;
 }
 .navbar a{
-  /* font-weight: bold; */
-  font-size: 17px;
+  font-size: 20px;
+}
+
+.navbar .nav-link {
+  position: relative;
+  overflow: hidden;
+}
+
+.navbar .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px; /* thickness of the underline */
+  background: currentColor; /* underline color same as text */
+  transform: translate3d(-100%, 0, 0);
+  transition: transform 0.3s ease;
+}
+
+.navbar .nav-link:hover::after,
+.navbar .nav-link:focus::after {
+  transform: translate3d(0, 0, 0);
 }
 
 .btn {
@@ -59,3 +83,5 @@
 .item-types-lists-container{
   list-style: none;
 }
+
+

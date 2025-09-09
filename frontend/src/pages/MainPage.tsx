@@ -9,7 +9,7 @@ function MainPage() {
 
   return (
     <>
-      <NavBar />
+      <NavBar/>
       <IndexCard />
 
     <div className="seasonal-box card border-0" style={{"height": "400px"}}>
