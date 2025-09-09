@@ -1,0 +1,61 @@
+.navbar{
+  font-family: 'Noto Serif Gurmukhi', sans-serif;
+}
+.navbar a{
+  /* font-weight: bold; */
+  font-size: 17px;
+}
+
+.btn {
+  padding: .45rem 1.5rem .35rem;
+}
+.gradient-custom {
+  background: white;
+}
+.btn-outline-light {
+  --mdb-btn-hover-bg: transparent;
+  --mdb-btn-active-bg: transparent;
+}
+.dress-icon{
+  width: 21px;
+  height: 21px;
+}
+.nav-expand-menu-inactive{
+  visibility: hidden;
+}
+.nav-expand-menu-active{
+  width: 100%;
+  background-color: white;
+  visibility: visible;
+}
+
+.nav-card-item {
+  width: 22rem;
+  height: 30rem;
+}
+
+.nav-card-item img{
+  width: 350px;
+  height: 350px;
+  object-fit: cover;
+}
+
+.container a{
+  height: 110px;
+}
+
+.dropdown-menu.dropdown-full {
+  left: 0 !important;
+  right: 0 !important;
+  border: none;
+  border-radius: 0;
+}
+
+.nav-item.dropdown:hover .dropdown-menu {
+  display: block;
+  margin: none;
+}
+
+.item-types-lists-container{
+  list-style: none;
+}

@@ -1,0 +1,61 @@
+@import url('https://fonts.cdnfonts.com/css/fjallaone');
+
+.fs-10{
+    font-size: 10px;
+}
+
+.fs-20{
+    font-size: 20px;
+}
+
+.fs-30{
+    font-size: 30px;
+}
+
+.fs-40{
+    font-size: 40px;
+}
+
+.fs-60{
+    font-size: 60px;
+}
+
+.fs-70{
+    font-size: 70px;
+}
+
+.fs-80{
+    font-size: 80px;
+}
+
+.fs-100{
+    font-size: 100px;
+}
+
+.mg-500{
+    margin-top:500px;
+}
+
+.mg-400{
+    margin-top:400px;
+}
+
+.mg-300{
+    margin-top:300px;
+}
+
+.mg-200{
+    margin-top:200px;
+}
+
+.mg-100{
+    margin-top:100px;
+}
+
+.font-style-fjallaone{
+    font-family: 'FjallaOne', sans-serif;
+}
+
+.bg-black{
+    background-color: black
+}
