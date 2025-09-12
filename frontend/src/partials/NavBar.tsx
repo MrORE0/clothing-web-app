@@ -52,6 +52,11 @@ export const NavBar = () => {
         }
     }
 
+    //Searchbar submit handle functionality
+    const HandleSearch = () => {
+        // ***Add a post request to get the seatch string to the backend***
+    }
+
     useEffect(() => {
         //listen for scrolling event
         window.addEventListener("scroll", scrollCheck)
@@ -185,6 +190,7 @@ export const NavBar = () => {
 
         </ul>
 
+        {/* ***Switch the logo text with logo image*** */}
         <div className="brand-container">
             <h1 className="fw-bold" style={{"fontFamily": "'Bright Live', sans-serif", "fontSize": "60px"}}>AssK</h1>
         </div>
@@ -200,7 +206,7 @@ export const NavBar = () => {
             </li>
         </ul>
 
-        <form className="d-flex input-group w-auto ms-lg-3 my-3 my-lg-0">
+        <form onSubmit={HandleSearch} className="d-flex input-group w-auto ms-lg-3 my-3 my-lg-0">
             <input type="search" className="form-control" placeholder="Explore" aria-label="Explore" />
             <button type="button" className="btn btn-outline-dark" data-mdb-ripple-init data-mdb-ripple-color="dark">
             Find
@@ -208,6 +214,11 @@ export const NavBar = () => {
         </form>
         </div>
     </div>
+    </nav>
+    <nav>
+        {/* This will be an under navbar that loads more specific types of clothing items, brands, trends, and sales  */}
+        {/* This will be just a line with a bunch of evenly spread fields that load 
+        automatically filtered content when clicked on a different page*/}
     </nav>
     </>
     )

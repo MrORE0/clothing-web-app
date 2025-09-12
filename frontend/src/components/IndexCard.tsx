@@ -1,6 +1,8 @@
 import "../styles/index-card.css"
 import modelsImage from "../assets/Model_Colorized.jpeg"
 
+// ***Remmember to refactor all this code to the MainPage Banner later and delete this component***
+
 export const IndexCard = () => {
     return (
         <>

@@ -83,5 +83,8 @@
 .item-types-lists-container{
   list-style: none;
 }
+.navbar-collapse{
+  /* ***Add styling to make a sidenavbar when screen is small*** */
+}
 
 

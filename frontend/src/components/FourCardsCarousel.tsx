@@ -24,7 +24,7 @@ import summer_clothes_v1_model_male1 from "../assets/summer_clothes_v1_model_mal
 import summer_clothes_v1_model_male2 from "../assets/summer_clothes_v1_model_male2.jpg"
 import summer_clothes_v1_model_male3 from "../assets/summer_clothes_v1_model_male3.jpg"
 
-import type { CardCarousel } from "../types/CardsCarouselType"
+import type { CarouselItemType } from "../types/CardsTypes"
 
 import arrow_left from "../assets/arrow-left.svg"
 import arrow_right from "../assets/arrow-right.svg"
@@ -42,18 +42,18 @@ const setCardValues = (imgSrc: string, name: string, price: number) => {
     }
 }
 
-export const CardsCarousel = () => {
-    const[card1, setCard1] = useState<CardCarousel>(setCardValues(swimwear_model_v2_1, "Bikini", 30))
-    const[card2, setCard2] = useState<CardCarousel>(setCardValues(swimwear_model_v2_2, "Bikini", 30))
-    const[card3, setCard3] = useState<CardCarousel>(setCardValues(swimwear_model_v2_3, "Bikini", 30))
-    const[card4, setCard4] = useState<CardCarousel>(setCardValues(swimwear_model_v2_4, "Bikini", 30))
-    const[card5, setCard5] = useState<CardCarousel>(setCardValues(swimwear_model_v3_1, "Bikini", 30))
-    const[card6, setCard6] = useState<CardCarousel>(setCardValues(swimwear_model_v3_2, "Bikini", 30))
-    const[card7, setCard7] = useState<CardCarousel>(setCardValues(swimwear_model_v3_3, "Bikini", 30))
-    const[card8, setCard8] = useState<CardCarousel>(setCardValues(swimwear_model_v4_1, "Bikini", 30))
-    const[card9, setCard9] = useState<CardCarousel>(setCardValues(swimwear_model_v4_2, "Bikini", 30))
-    const[card10, setCard10] = useState<CardCarousel>(setCardValues(summer_clothes_v2_model1, "Bikini", 30))
-    const[card11, setCard11] = useState<CardCarousel>(setCardValues(summer_clothes_v2_model2, "Bikini", 30))
+export const FourCardsCarousel = () => {
+    const[card1, setCard1] = useState<CarouselItemType>(setCardValues(swimwear_model_v2_1, "Bikini", 30))
+    const[card2, setCard2] = useState<CarouselItemType>(setCardValues(swimwear_model_v2_2, "Bikini", 30))
+    const[card3, setCard3] = useState<CarouselItemType>(setCardValues(swimwear_model_v2_3, "Bikini", 30))
+    const[card4, setCard4] = useState<CarouselItemType>(setCardValues(swimwear_model_v2_4, "Bikini", 30))
+    const[card5, setCard5] = useState<CarouselItemType>(setCardValues(swimwear_model_v3_1, "Bikini", 30))
+    const[card6, setCard6] = useState<CarouselItemType>(setCardValues(swimwear_model_v3_2, "Bikini", 30))
+    const[card7, setCard7] = useState<CarouselItemType>(setCardValues(swimwear_model_v3_3, "Bikini", 30))
+    const[card8, setCard8] = useState<CarouselItemType>(setCardValues(swimwear_model_v4_1, "Bikini", 30))
+    const[card9, setCard9] = useState<CarouselItemType>(setCardValues(swimwear_model_v4_2, "Bikini", 30))
+    const[card10, setCard10] = useState<CarouselItemType>(setCardValues(summer_clothes_v2_model1, "Bikini", 30))
+    const[card11, setCard11] = useState<CarouselItemType>(setCardValues(summer_clothes_v2_model2, "Bikini", 30))
 
     //reference choice gender
     const womanChoice = useRef<HTMLHeadingElement>(null);
@@ -95,7 +95,7 @@ export const CardsCarousel = () => {
                 setCard10(setCardValues(summer_clothes_v2_model1, "Bikini", 30))
                 setCard11(setCardValues(summer_clothes_v2_model2, "Bikini", 30))
             }else if(element.current.classList.contains("man-choice-four-cards")){
-                setCard1(setCardValues(swimwear_v1_model_male1, "Bikini", 30));
+                setCard1(setCardValues(swimwear_v1_model_male1, "Swim Trunks", 40));
                 setCard2(setCardValues(swimwear_v1_model_male2, "Bikini", 30))
                 setCard3(setCardValues(swimwear_v1_model_male3, "Bikini", 30))
                 setCard4(setCardValues(swimwear_v2_model_male1, "Bikini", 30))
