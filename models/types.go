@@ -1,32 +1,32 @@
 package models
 
 import (
-	"math"
 	"net/http"
-	"strconv"
-	"strings"
 	"time"
 )
 
 // --------- RAW STRUCTS (for unmarshaling JSON from Cropp API) ---------
 
 type RawProduct struct {
-	ID          string           `json:"id"`
+	ID          int              `json:"id"`
 	ProductCode string           `json:"sku"`
+	Brand       string           `json:"brand"`
 	Name        string           `json:"name"`
-	Images      Images           `json:"images"`
+	Description string           `json:"description"`
+	Material    string           `json:"material"`
 	URL         string           `json:"url"`
+	Sizes       []Sizes          `json:"sizes"`
+	Prices      Prices           `json:"price"`
 	Colors      []RawColorOption `json:"colorOptions"`
+	Photos      []Photo          `json:"photos"`
 }
 
 type RawColorOption struct {
 	ProductCode string       `json:"sku"`
 	URL         string       `json:"url"`
-	Sizes       []Size       `json:"sizes"`
 	ColorInfo   RawColorInfo `json:"color"`
 	IsActive    bool         `json:"isActive"`
 	IsBlocked   bool         `json:"isBlocked"`
-	Prices      RawPrices    `json:"prices"`
 }
 
 type RawColorInfo struct {
@@ -35,143 +35,96 @@ type RawColorInfo struct {
 	Photo     string `json:"photo"`
 }
 
-type RawPrices struct {
-	Currency                      string  `json:"currency"`
-	Price                         string  `json:"price"`
-	FinalPrice                    string  `json:"finalPrice"`
-	MobileFinalPrice              float64 `json:"mobileFinalPrice"`
-	MobileRegularPrice            float64 `json:"mobileRegularPrice"`
-	AlternativeCurrencyFinalPrice string  `json:"alternativeCurrencyFinalPrice"`
-	AlternativeCurrency           string  `json:"alternativeCurrency"`
-	HasDiscount                   bool    `json:"hasDiscount"`
-}
-
-func (rp *RawPrices) ToParsed() Prices {
-	price, _ := strconv.ParseFloat(rp.Price, 64)
-	finalPrice, _ := strconv.ParseFloat(rp.FinalPrice, 64)
-	return Prices{
-		Currency:                      rp.Currency,
-		Price:                         price,
-		FinalPrice:                    finalPrice,
-		MobileFinalPrice:              rp.MobileFinalPrice,
-		MobileRegularPrice:            rp.MobileRegularPrice,
-		AlternativeCurrencyFinalPrice: rp.AlternativeCurrencyFinalPrice,
-		AlternativeCurrency:           rp.AlternativeCurrency,
-		HasDiscount:                   rp.HasDiscount,
-	}
+type ProductCode struct {
+	ProductCode string `json:"sku"`
 }
 
 // --------- PARSED STRUCTS (used internally from us ) ---------
 
 type Product struct {
-	ID          string        `json:"id"`
+	ID          int           `json:"id"`
 	ProductCode string        `json:"sku"`
 	Name        string        `json:"name"`
 	Prices      Prices        `json:"prices"`
-	Images      Images        `json:"images"`
+	Photos      []Photo       `json:"images"`
 	URL         string        `json:"url"`
-	Variants    []ColorOption `json:"colorOptions"`
-	Sizes       []Size        `json:"sizes"`
+	ColorOption []ColorOption `json:"colorOptions"`
+	Sizes       []Sizes       `json:"sizes"`
+	Brand       string        `json:"brand,omitempty"`
+	Description string        `json:"info,omitempty"`
+	Material    string        `json:"material"`
+	HasDiscount bool          `json:"hasDiscount"`
 }
 
 type ColorOption struct {
+	ProductCode string `json:"sku"`
 	Photo       string `json:"photo"`
 	ColorName   string `json:"name"`
 	EngName     string `json:"cssName"`
 	URL         string `json:"url"`
-	ProductCode string `json:"sku"`
 }
 
 type Prices struct {
-	Currency                      string  `json:"currency"`
-	Price                         float64 `json:"price"`
-	FinalPrice                    float64 `json:"finalPrice"`
-	MobileFinalPrice              float64 `json:"mobileFinalPrice"`
-	MobileRegularPrice            float64 `json:"mobileRegularPrice"`
-	AlternativeCurrencyFinalPrice string  `json:"alternativeCurrencyFinalPrice"`
-	AlternativeCurrency           string  `json:"alternativeCurrency"`
-	HasDiscount                   bool    `json:"hasDiscount"`
+	Currency                        string  `json:"currency"`
+	RegularPrice                    float64 `json:"regular"`
+	FormatedRegularPrice            string  `json:"formattedRegular"`
+	FinalPrice                      float64 `json:"finalPrice"`
+	FormatedFinalPrice              string  `json:"formattedFinal"`
+	AlternativeCurrencyRegularPrice float64 `json:"alternativeCurrencyMobileRegularPrice"`
+	FormatedAltRegularPrice         string  `json:"formattedAlternativeCurrencyMobileRegularPrice"`
+	AlternativeCurrencyFinalPrice   float64 `json:"alternativeCurrencyMobileFinalPrice"`
+	FormatedAltFinalPrice           string  `json:"formattedAlternativeCurrencyMobileFinalPrice"`
+	AlternativeCurrency             string  `json:"alternativeCurrency"`
 }
 
-type ImageResolution struct {
-	Front string `json:"front"`
-	Back  string `json:"back"`
-}
-
-type Images struct {
-	Small ImageResolution `json:"850"`
-	Large ImageResolution `json:"1200"`
+type Photo struct {
+	Small    string `json:"small"`
+	Medium   string `json:"medium"`
+	Original string `json:"original"`
 }
 
 // --------- TRANSFORM FUNCTION ---------
 
+// It will parse the rawProduct from the API response into our json version
 func (rp *RawProduct) ToParsed() Product {
 	var variants []ColorOption
-	var prices Prices
-	var sizes []Size
 
 	for _, color := range rp.Colors {
 
 		// Create variant
 		variant := ColorOption{
+			ProductCode: color.ProductCode,
+			Photo:       color.ColorInfo.Photo,
 			ColorName:   color.ColorInfo.ColorName,
 			EngName:     color.ColorInfo.EngName,
-			Photo:       color.ColorInfo.Photo, // This is the small color photo
 			URL:         color.URL,
-			ProductCode: color.ProductCode,
 		}
 
-		// Parse fallback base price from raw product
-		basePrice, _ := strconv.ParseFloat(color.Prices.Price, 64)
-
-		// Parse color variant prices
-		multiplier := math.Pow(10, float64(2))
-		color.Prices.Price = strings.ReplaceAll(color.Prices.Price, ",", ".") // need this in order for the conversion bellow to work
-		color.Prices.FinalPrice = strings.ReplaceAll(color.Prices.FinalPrice, ",", ".")
-
-		regularPrice, _ := strconv.ParseFloat(color.Prices.Price, 32)
-		regularPrice = math.Round(regularPrice*multiplier) / multiplier
-
-		finalPrice, _ := strconv.ParseFloat(color.Prices.FinalPrice, 32)
-		finalPrice = math.Round(finalPrice*multiplier) / multiplier
-
-		variantPrice := regularPrice
-		if variantPrice == 0 {
-			variantPrice = basePrice
-		}
-
-		prices = Prices{
-			color.Prices.Currency, regularPrice, finalPrice,
-			color.Prices.MobileFinalPrice,
-			color.Prices.MobileRegularPrice,
-			color.Prices.AlternativeCurrencyFinalPrice,
-			color.Prices.AlternativeCurrency,
-			color.Prices.HasDiscount,
-		}
 		variants = append(variants, variant)
-		sizes = color.Sizes
 	}
 
 	return Product{
 		ID:          rp.ID,
 		ProductCode: rp.ProductCode,
 		Name:        rp.Name,
-		Prices:      prices,
-		Images:      rp.Images,
+		Description: rp.Description,
+		Material:    rp.Material,
+		Prices:      rp.Prices,
+		Photos:      rp.Photos,
 		URL:         rp.URL,
-		Variants:    variants,
-		Sizes:       sizes,
+		ColorOption: variants,
+		Sizes:       rp.Sizes,
+		Brand:       rp.Brand,
 	}
 }
 
-type Size struct {
-	SizeName       string `json:"sizeName"`
-	Stock          bool   `json:"stock"`
-	MagentoID      int    `json:"magentoId"`
-	SizeID         int    `json:"sizeId"`
-	SKU            string `json:"sku"`
-	Key            string `json:"key"`
-	InTransitStock bool   `json:"inTransitStock"`
+type Sizes struct {
+	Sizes []SizeInfo // not sure if this will need the name of it in the json which is 0,1,2,....
+}
+
+type SizeInfo struct {
+	SizeName string `json:"sizeName"`
+	Stock    bool   `json:"stock"`
 }
 
 type RequestResult struct {
