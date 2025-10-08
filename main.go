@@ -22,7 +22,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 		client := scrapers.NewAPIClient("https://arch.cropp.com/api/1099/category/17991/productsWithoutFilters", "https://arch.cropp.com/api/1099/product/")
-		products, err := client.FetchAllProducts()
+		products, err := client.FetchAllParsedProducts()
 		if err != nil {
 			log.Printf("Cropp female error: %v", err)
 		}
@@ -34,7 +34,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 		client := scrapers.NewAPIClient("https://arch.cropp.com/api/1099/category/19173/productsWithoutFilters", "https://arch.cropp.com/api/1099/product/")
-		products, err := client.FetchAllProducts()
+		products, err := client.FetchAllParsedProducts()
 		if err != nil {
 			log.Printf("Cropp male error: %v", err)
 		}
@@ -47,7 +47,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 		client := scrapers.NewAPIClient("https://arch.housebrand.com/api/1081/category/2879/productsWithoutFilters", "https://arch.housebrand.com/api/1081/product/")
-		products, err := client.FetchAllProducts()
+		products, err := client.FetchAllParsedProducts()
 		if err != nil {
 			log.Printf("Housebrand female error: %v", err)
 		}
@@ -59,7 +59,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 		client := scrapers.NewAPIClient("https://arch.housebrand.com/api/1081/category/3055/productsWithoutFilters", "https://arch.housebrand.com/api/1081/product/")
-		products, err := client.FetchAllProducts()
+		products, err := client.FetchAllParsedProducts()
 		if err != nil {
 			log.Printf("Housebrand male error: %v", err)
 		}
@@ -71,7 +71,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 		client := scrapers.NewAPIClient("https://arch.mohito.com/api/1086/category/1983/productsWithoutFilters", "https://arch.mohito.com/api/1086/product/")
-		products, err := client.FetchAllProducts()
+		products, err := client.FetchAllParsedProducts()
 		if err != nil {
 			log.Printf("Mohito error: %v", err)
 		}
