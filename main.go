@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"sync"
 	"time"
@@ -10,6 +11,7 @@ import (
 )
 
 func main() {
+	fmt.Println("Starting the scraper")
 	var wg sync.WaitGroup
 
 	// Initialize headless browser scraper with 5 persistent contexts (one per worker)

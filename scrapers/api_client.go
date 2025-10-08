@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"net/http/cookiejar"
 	"sync"
@@ -27,15 +28,38 @@ type APIClient struct {
 }
 
 func NewAPIClient(baseURL string, secondURL string) *APIClient {
-    jar, _ := cookiejar.New(nil)
-    return &APIClient{
-        BaseURL:   baseURL,
-        SecondURL: secondURL,
-        Client: &http.Client{
-            Timeout: 30 * time.Second,
-            Jar:     jar,
-        },
-    }
+	jar, _ := cookiejar.New(nil)
+	// might need to adjust these so we don't wait as much
+	transport := &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout:   5 * time.Second,
+			KeepAlive: 30 * time.Second,
+		}).DialContext,
+		MaxIdleConns:          100,
+		MaxIdleConnsPerHost:   20,
+		IdleConnTimeout:       30 * time.Second,
+		TLSHandshakeTimeout:   5 * time.Second,
+		ResponseHeaderTimeout: 12 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+	}
+	return &APIClient{
+		BaseURL:   baseURL,
+		SecondURL: secondURL,
+		Client: &http.Client{
+			Timeout:   0,
+			Transport: transport,
+			Jar:       jar,
+		},
+	}
+}
+
+// printScrapeProgress prints a simple inline progress indicator for testing.
+func printScrapeProgress(done int, total int) {
+	if total <= 0 {
+		fmt.Printf("Scraped %d out of %d\r", done, total)
+		return
+	}
+	fmt.Printf("Finished: %d out of %d\r", done, total)
 }
 
 // buildListingURL returns the API listing URL for a given page size.
@@ -78,7 +102,9 @@ func (c *APIClient) spawnWorkers(ctx context.Context, numWorkers int, rawProduct
 			defer wgReq.Done()
 			for code := range jobs {
 				utils.RandomSleep()
-				_, _, err := c.fetchProductInfo(ctx, code, rawProducts)
+				reqCtx, cancel := context.WithTimeout(ctx, 12*time.Second)
+				_, _, err := c.fetchProductInfo(reqCtx, code, rawProducts)
+				cancel()
 				if err != nil {
 					log.Printf("[Worker %d] failed %s: %v", workerID, code, err)
 					continue
@@ -120,7 +146,6 @@ func (c *APIClient) fetchProductCodes(ctx context.Context, rawURL string) (*List
 func (c *APIClient) fetchProductInfo(ctx context.Context, rawURL string, rawProducts chan *models.RawProduct) (int, http.Header, error) {
 	statusCode, headers, body, brand, err := utils.MakeJSONRequest(ctx, c.Client, rawURL)
 	if err != nil {
-		fmt.Println(rawURL)
 		return statusCode, headers, err
 	}
 
@@ -131,13 +156,14 @@ func (c *APIClient) fetchProductInfo(ctx context.Context, rawURL string, rawProd
 	result.Brand = brand
 	// pipe the result to be parsed
 	rawProducts <- &result
+	fmt.Println("Fetched info for:", rawURL)
 	return statusCode, headers, nil
 }
 
 // Spawns the workers for each website and gives them jobs(the item codes to go and request)
 // then rawProduct is then parsed and returns a list of the ready to save products
 func (c *APIClient) FetchAllParsedProducts() (*[]models.Product, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 	defer cancel()
 
 	total, err := c.getTotalProducts(ctx)
@@ -149,6 +175,7 @@ func (c *APIClient) FetchAllParsedProducts() (*[]models.Product, error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("Fetched all the product codes")
 
 	rawProducts := make(chan *models.RawProduct)
 	results := make(chan *models.Product, len(productCodes))
@@ -172,10 +199,13 @@ func (c *APIClient) FetchAllParsedProducts() (*[]models.Product, error) {
 	}()
 
 	var products []models.Product
+	done := 0
+	totalCount := len(productCodes)
 	for p := range results {
 		products = append(products, *p)
+		done++
+		printScrapeProgress(done, totalCount)
 	}
-
-	fmt.Printf("Successfully scraped %d products ✅\n.", len(products))
+	fmt.Printf("\nSuccessfully scraped %d products ✅\n.", len(products))
 	return &products, nil
 }
