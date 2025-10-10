@@ -53,15 +53,6 @@ func NewAPIClient(baseURL string, secondURL string) *APIClient {
 	}
 }
 
-// printScrapeProgress prints a simple inline progress indicator for testing.
-func printScrapeProgress(done int, total int) {
-	if total <= 0 {
-		fmt.Printf("Scraped %d out of %d\r", done, total)
-		return
-	}
-	fmt.Printf("Finished: %d out of %d\r", done, total)
-}
-
 // buildListingURL returns the API listing URL for a given page size.
 func (c *APIClient) buildListingURL(pageSize int) string {
 	return fmt.Sprintf("%s?offset=0&pageSize=%d&filters[sortBy]=3&flags[enableddiscountfilter]=true&flags[colorspreviewinfilters]=true&flags[quickshop]=true&flags[loadmorebutton]=1&flags[filterscounter]=1",
@@ -92,8 +83,9 @@ func (c *APIClient) fetchAllProductCodes(ctx context.Context, total int) ([]mode
 }
 
 // spawnWorkers launches request and parse workers and returns channels and waitgroups.
-func (c *APIClient) spawnWorkers(ctx context.Context, numWorkers int, rawProducts chan *models.RawProduct, results chan *models.Product) (chan string, *sync.WaitGroup, *sync.WaitGroup) {
+func (c *APIClient) spawnWorkers(ctx context.Context, numWorkers int, rawProducts chan *models.RawProduct, results chan *models.Product) (chan string, *sync.WaitGroup, *sync.WaitGroup, chan string) {
 	jobs := make(chan string, numWorkers)
+	failed := make(chan string, numWorkers) // Track failed URLs
 
 	var wgReq sync.WaitGroup
 	for i := 0; i < numWorkers; i++ {
@@ -102,11 +94,16 @@ func (c *APIClient) spawnWorkers(ctx context.Context, numWorkers int, rawProduct
 			defer wgReq.Done()
 			for code := range jobs {
 				utils.RandomSleep()
-				reqCtx, cancel := context.WithTimeout(ctx, 12*time.Second)
+				reqCtx, cancel := context.WithCancel(ctx)
 				_, _, err := c.fetchProductInfo(reqCtx, code, rawProducts)
 				cancel()
 				if err != nil {
-					log.Printf("[Worker %d] failed %s: %v", workerID, code, err)
+					log.Printf("[Worker %d] failed : %v", workerID, err)
+					// Send failed URL to retry channel
+					select {
+					case failed <- code:
+					default:
+					}
 					continue
 				}
 			}
@@ -125,7 +122,7 @@ func (c *APIClient) spawnWorkers(ctx context.Context, numWorkers int, rawProduct
 		}(i)
 	}
 
-	return jobs, &wgReq, &wgParse
+	return jobs, &wgReq, &wgParse, failed
 }
 
 // The function will return a pointer to a slice containing the product codes and the total number
@@ -156,14 +153,13 @@ func (c *APIClient) fetchProductInfo(ctx context.Context, rawURL string, rawProd
 	result.Brand = brand
 	// pipe the result to be parsed
 	rawProducts <- &result
-	fmt.Println("Fetched info for:", rawURL)
 	return statusCode, headers, nil
 }
 
 // Spawns the workers for each website and gives them jobs(the item codes to go and request)
 // then rawProduct is then parsed and returns a list of the ready to save products
 func (c *APIClient) FetchAllParsedProducts() (*[]models.Product, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
 	total, err := c.getTotalProducts(ctx)
@@ -181,7 +177,7 @@ func (c *APIClient) FetchAllParsedProducts() (*[]models.Product, error) {
 	results := make(chan *models.Product, len(productCodes))
 
 	numWorkers := 5
-	jobs, wgReq, wgParse := c.spawnWorkers(ctx, numWorkers, rawProducts, results)
+	jobs, wgReq, wgParse, failed := c.spawnWorkers(ctx, numWorkers, rawProducts, results)
 
 	for _, code := range productCodes {
 		productURL := c.SecondURL + code.ProductCode
@@ -200,12 +196,49 @@ func (c *APIClient) FetchAllParsedProducts() (*[]models.Product, error) {
 
 	var products []models.Product
 	done := 0
-	totalCount := len(productCodes)
 	for p := range results {
 		products = append(products, *p)
 		done++
-		printScrapeProgress(done, totalCount)
 	}
-	fmt.Printf("\nSuccessfully scraped %d products ✅\n.", len(products))
+
+	// Collect failed URLs for retry
+	var failedURLs []string
+	close(failed)
+	for url := range failed {
+		failedURLs = append(failedURLs, url)
+	}
+
+	// Retry failed requests if any
+	if len(failedURLs) > 0 {
+		fmt.Printf("\nRetrying %d failed requests...\n", len(failedURLs))
+
+		// Create new channels for retry
+		retryRawProducts := make(chan *models.RawProduct)
+		retryResults := make(chan *models.Product, len(failedURLs))
+
+		// Spawn retry workers
+		retryJobs, retryWgReq, retryWgParse, _ := c.spawnWorkers(ctx, numWorkers, retryRawProducts, retryResults)
+
+		// Send failed URLs to retry
+		for _, url := range failedURLs {
+			retryJobs <- url
+		}
+		close(retryJobs)
+
+		go func() {
+			retryWgReq.Wait()
+			close(retryRawProducts)
+		}()
+		go func() {
+			retryWgParse.Wait()
+			close(retryResults)
+		}()
+
+		// Collect retry results
+		for p := range retryResults {
+			products = append(products, *p)
+			done++
+		}
+	}
 	return &products, nil
 }
