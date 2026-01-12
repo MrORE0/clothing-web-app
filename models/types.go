@@ -1,7 +1,9 @@
 package models
 
 import (
+	"html"
 	"net/http"
+	"regexp"
 	"time"
 )
 
@@ -18,7 +20,7 @@ type RawProduct struct {
 	Sizes       []Sizes          `json:"sizes"`
 	Prices      Prices           `json:"price"`
 	Colors      []RawColorOption `json:"colorOptions"`
-	Photos      []Photo          `json:"photos"`
+	Photos      []any            `json:"photos"`
 }
 
 type RawColorOption struct {
@@ -46,7 +48,7 @@ type Product struct {
 	ProductCode string        `json:"sku"`
 	Name        string        `json:"name"`
 	Prices      Prices        `json:"prices"`
-	Photos      []Photo       `json:"images"`
+	Photos      []any         `json:"images"`
 	URL         string        `json:"url"`
 	ColorOption []ColorOption `json:"colorOptions"`
 	Sizes       []Sizes       `json:"sizes"`
@@ -77,12 +79,6 @@ type Prices struct {
 	AlternativeCurrency             string  `json:"alternativeCurrency"`
 }
 
-type Photo struct {
-	Small    string `json:"small"`
-	Medium   string `json:"medium"`
-	Original string `json:"original"`
-}
-
 // --------- TRANSFORM FUNCTION ---------
 
 // It will parse the rawProduct from the API response into our json version
@@ -102,12 +98,11 @@ func (rp *RawProduct) ToParsed() Product {
 
 		variants = append(variants, variant)
 	}
-
 	return Product{
 		ID:          rp.ID,
 		ProductCode: rp.ProductCode,
 		Name:        rp.Name,
-		Description: rp.Description,
+		Description: CleanDescription(rp.Description),
 		Material:    rp.Material,
 		Prices:      rp.Prices,
 		Photos:      rp.Photos,
@@ -116,6 +111,17 @@ func (rp *RawProduct) ToParsed() Product {
 		Sizes:       rp.Sizes,
 		Brand:       rp.Brand,
 	}
+}
+
+func CleanDescription(s string) string {
+	// Step 1: Decode escaped Unicode HTML entities (e.g., \u003c → <)
+	unescaped := html.UnescapeString(s)
+
+	// Step 2: Remove all HTML tags like <p>, </p>, etc.
+	re := regexp.MustCompile(`<[^>]*>`)
+	clean := re.ReplaceAllString(unescaped, "")
+
+	return clean
 }
 
 type Sizes struct {
