@@ -142,7 +142,9 @@ pids
 # dotenv environment variables file
 .env
 .env.test
+.DS_Store
 
 # Temporary folders
 tmp/
 temp/
+data/
