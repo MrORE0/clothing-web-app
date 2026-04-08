@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach } from 'vitest'
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { NavBar } from '../partials/NavBar'
@@ -22,9 +23,9 @@ describe('NavBar', () => {
             expect(screen.getByText('Hot')).toBeInTheDocument()
         })
 
-        it('renders Custome nav link pointing to /customize', () => {
+        it('renders Custom nav link pointing to /customize', () => {
             renderNavBar()
-            const link = screen.getByRole('link', { name: 'Custome' })
+            const link = screen.getByRole('link', { name: 'Custom' })
             expect(link).toHaveAttribute('href', '/customize')
         })
 
