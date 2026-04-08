@@ -1,0 +1,35 @@
+.customization-page-container{
+    img{
+        width: 50px;
+        height: 50px;
+    }
+
+    .customize-upper-body{
+        background-color: #F5F0CD;
+    }
+    
+    .customize-lower-body{
+        background-color: #FADA7A;
+    }
+    .customize-clothing{
+        background-color: #578FCA;
+        color: white;
+        input{
+            background-color: transparent;
+            border: none;
+            border-bottom: 2px white solid;
+            &:focus{
+                outline: none;
+            }
+        }
+    }
+
+    input{
+        background-color: transparent;
+        border: none;
+        border-bottom: 2px black solid;
+        &:focus{
+            outline: none;
+        }
+    }  
+}

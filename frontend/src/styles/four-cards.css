@@ -1,0 +1,39 @@
+.four-cards-component-container .male-female-option h1:hover {
+  cursor: pointer;
+}
+.four-cards-component-container .cards-arrows-container {
+  width: 93%;
+  overflow: hidden;
+}
+.four-cards-component-container .cards-arrows-container .left-arrow-button-container .left-arrow-button {
+  width: 50px;
+  height: 70px;
+}
+.four-cards-component-container .cards-arrows-container .left-arrow-button-container .left-arrow-button img {
+  width: 50px;
+  height: 70px;
+  pointer-events: none;
+}
+.four-cards-component-container .cards-arrows-container .left-arrow-button-container .left-arrow-button:hover {
+  background-color: rgb(22, 22, 22) !important;
+  cursor: pointer;
+}
+.four-cards-component-container .cards-arrows-container .right-arrow-button-container .right-arrow-button {
+  width: 50px;
+  height: 70px;
+}
+.four-cards-component-container .cards-arrows-container .right-arrow-button-container .right-arrow-button img {
+  width: 50px;
+  height: 70px;
+  pointer-events: none;
+}
+.four-cards-component-container .cards-arrows-container .right-arrow-button-container .right-arrow-button:hover {
+  background-color: rgb(22, 22, 22) !important;
+  cursor: pointer;
+}
+.four-cards-component-container .cards-arrows-container .cards-container {
+  position: relative;
+  transition: 0.2s ease-in;
+}
+
+/*# sourceMappingURL=four-cards.css.map */
