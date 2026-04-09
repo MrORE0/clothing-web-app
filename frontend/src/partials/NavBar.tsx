@@ -26,18 +26,6 @@ export const NavBar = () => {
   //Pretty self-explanatory
   const refCollapseNav = useRef<HTMLDivElement | null>(null);
 
-  //Check if scrolled up or down
-  const scrollCheck = () => {
-    const currentScrollY = window.scrollY;
-
-    if (currentScrollY > lastScrollY.current) {
-      NavBarOnScrollDown();
-    } else if (currentScrollY < lastScrollY.current) {
-      NavBarOnScrollUp();
-    }
-    lastScrollY.current = currentScrollY;
-  }
-
   const NavBarOnScrollDown = () => {
     if (refNavbar.current) {
       refNavbar.current.style.height = '0px';
@@ -58,11 +46,24 @@ export const NavBar = () => {
   }
 
   useEffect(() => {
+    //Check if scrolled up or down
+    const scrollCheck = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY.current) {
+        NavBarOnScrollDown();
+      } else if (currentScrollY < lastScrollY.current) {
+        NavBarOnScrollUp();
+      }
+      lastScrollY.current = currentScrollY;
+    }
+
     //listen for scrolling event
     window.addEventListener("scroll", scrollCheck)
 
     //Setting the brands list here since it doesn't require change later
     setBrandsList(Brands)
+
+    return () => window.removeEventListener("scroll", scrollCheck)
   }, [])
 
   return (

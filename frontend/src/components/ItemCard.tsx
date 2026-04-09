@@ -13,7 +13,7 @@ interface SimlpifiedCardInt {
     itemData: SimplifiedItemType;
 }
 
-export const ProductCard: React.FC<ProductCardInt> = (itemData) => {
+export const ProductCard: React.FC<ProductCardInt> = (_itemData) => {
     return (
         <>
             {/* Basic card, will need to match the cards from the brands websites data */}
@@ -22,7 +22,7 @@ export const ProductCard: React.FC<ProductCardInt> = (itemData) => {
 
 }
 
-export const CarouselCard: React.FC<CarouselCardInt> = (itemData) => {
+export const CarouselCard: React.FC<CarouselCardInt> = (_itemData) => {
     return (
         <>
             {/* ***Need to convert the carousel card code here***  */}
@@ -31,7 +31,7 @@ export const CarouselCard: React.FC<CarouselCardInt> = (itemData) => {
 
 }
 
-export const SimplifiedCard: React.FC<SimlpifiedCardInt> = (itemData) => {
+export const SimplifiedCard: React.FC<SimlpifiedCardInt> = (_itemData) => {
     return (
         <>
             {/* ***Need to match the cards from the brands sites data***  */}
