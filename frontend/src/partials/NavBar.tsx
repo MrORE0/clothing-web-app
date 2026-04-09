@@ -1,6 +1,6 @@
 import "./partials-styles/additional-styling.css"
 import { Link } from "react-router"
-import { useRef, useState, useEffect, type JSX } from "react"
+import { useRef, useState, useEffect } from "react"
 
 //images imports 
 import male_model_nav_menu from "../assets/male_model_nav_menu.jpg"
