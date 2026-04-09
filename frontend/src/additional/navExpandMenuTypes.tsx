@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom"
-
 
 export const ManClothingTypes = `
     <li><Link to={"/"} className="link-underline link-underline-opacity-0 link-secondary">See All</Link></li>

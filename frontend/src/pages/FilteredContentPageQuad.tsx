@@ -4,7 +4,7 @@ interface FilteredContentInt {
     filteredContent: Array<ItemType>
 }
 
-export const FilteredContentPageQuad: React.FC<FilteredContentInt> = (filteredContent) => {
+export const FilteredContentPageQuad: React.FC<FilteredContentInt> = () => {
 
     return (
         <>

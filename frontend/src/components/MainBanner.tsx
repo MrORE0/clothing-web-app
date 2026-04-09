@@ -9,7 +9,7 @@ interface MainBannerDouble {
     imageSource2: string;
 }
 
-export const MainBannerSingle: React.FC<MainBannerSingle> = ({imageSource}) => {
+export const MainBannerSingle: React.FC<MainBannerSingle> = () => {
 
     return(
     <>

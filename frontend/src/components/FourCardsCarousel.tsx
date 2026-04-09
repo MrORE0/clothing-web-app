@@ -1,3 +1,4 @@
+import React from "react"
 
 //female photos
 import swimwear_model_v2_1 from "../assets/swimwear_v2_model1.jpg"
@@ -11,7 +12,7 @@ import swimwear_model_v4_1 from "../assets/swimwear_v4_model1.jpg"
 import swimwear_model_v4_2 from "../assets/swimwear_v4_model2.jpg"
 import summer_clothes_v2_model1 from "../assets/summer_clothes_v2_model1.jpg"
 import summer_clothes_v2_model2 from "../assets/summer_clothes_v2_model2.jpg"
-import summer_clothes_v2_model3 from "../assets/summer_clothes_v2_model3.jpg"
+
 
 //male photos
 import swimwear_v1_model_male1 from "../assets/swimwear_v1_model_male1.jpg"
@@ -63,11 +64,11 @@ export const FourCardsCarousel = () => {
     const arrowLeftRef = useRef<HTMLDivElement>(null);
     const arrowRightRef = useRef<HTMLDivElement>(null);
     const carouselImagesRef = useRef<HTMLDivElement>(null);
-    let carouselValue = 1450;
+    const carouselValue = 1450;
     let carouselIncrement = 0;
 
 
-    const ChoiceStyling = (choice1: any, choice2: any) => {
+    const ChoiceStyling = (choice1: React.RefObject<HTMLHeadingElement>, choice2: React.RefObject<HTMLHeadingElement>) => {
         if(choice1 != null && choice2 != null){
             choice1.current.classList.add("fw-bold");
             choice1.current.classList.add("border-bottom");
@@ -80,7 +81,7 @@ export const FourCardsCarousel = () => {
             choice2.current.classList.remove("border-4");
         }
     }
-    const isClicked = (element: any) => {
+    const isClicked = (element: React.RefObject<HTMLHeadingElement>) => {
         if(element.current){
             if(element.current.classList.contains("woman-choice-four-cards")){
                 setCard1(setCardValues(swimwear_model_v2_1, "Bikini", 30));

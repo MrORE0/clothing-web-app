@@ -3,7 +3,7 @@ interface DoubleImageBanner {
    
 }
 
-export const DoubleImageBanner: React.FC<DoubleImageBanner> = (imageSource ) => {
+export const DoubleImageBanner: React.FC<DoubleImageBanner> = () => {
 
     return(
     <>
