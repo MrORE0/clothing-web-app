@@ -3,8 +3,8 @@ name: Frontend Tests
 on:
   push:
     branches: ['**']
-  pull_request:
-    branches: ['**']
+    paths:
+      - 'frontend/**'
 
 jobs:
   test:
